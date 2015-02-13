@@ -1,0 +1,21 @@
+{
+  "name": "gulp-html-escape",
+  "version": "0.0.1",
+  "description": "gulp plugin to use html-escape package",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "keywords": [
+    "gulp",
+    "html",
+    "escape"
+  ],
+  "author": "Matthieu BOHEAS",
+  "license": "MIT",
+  "dependencies": {
+    "gulp-util": "^3.0.2",
+    "html-escape": "^1.0.1",
+    "map-stream": "0.0.5"
+  }
+}
