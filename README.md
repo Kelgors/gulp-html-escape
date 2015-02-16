@@ -12,7 +12,7 @@
   </tr>
 </table>
 
-This plugin is designed to use the [html-replace](https://github.com/parshap/html-escape) package with [gulp](https://github.com/gulpjs/gulp).
+This plugin is designed to use the [html-escape](https://github.com/parshap/html-escape) package with [gulp](https://github.com/gulpjs/gulp).
 I used it in a project for a customer and now i need it in another project so, i pushed it to npm.
 
 ## Usage
