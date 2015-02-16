@@ -18,7 +18,6 @@ function testfile() {
     return path.join('test/files', filename);
   });
 }
-console.log(testfile('coucou', 'machin'))
 
 describe(PACKAGE_NAME, function () {
   it('should emit error on streamed file', function (done) {
