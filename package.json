@@ -1,6 +1,6 @@
 {
   "name": "gulp-html-escape",
-  "version": "0.0.2",
+  "version": "0.0.3",
   "description": "gulp plugin to use html-escape package",
   "main": "index.js",
   "repository": {
