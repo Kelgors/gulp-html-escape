@@ -21,7 +21,7 @@ I used it in a project for a customer and now i need it in another project so, i
 var escape = require('gulp-html-escape');
 var options = {
   templates: {
-    source: 'src/templates/*.html'
+    source: 'src/templates/*.html',
     destination: 'dist/templates'
   }
 };
@@ -34,7 +34,7 @@ gulp.task('templates:compile', function () {
       },
       suffix: '</div>'
     })
-    .pipe(gulp.dest(options.templates.destination))
+    .pipe(gulp.dest(options.templates.destination));
 });
 
 ```
