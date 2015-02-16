@@ -1,46 +1,60 @@
-var PACKAGE_NAME = 'gulp-html-escape';
-var map = require('map-stream');
-var PluginError = require('gulp-util').PluginError;
-var escape = require('html-escape');
+var
+  PACKAGE_NAME = require('./package.json').name,
+  map = require('map-stream'),
+  PluginError = require('gulp-util').PluginError,
+  escape = require('html-escape'),
+  path = require('path');
 
-function getId(file, options) {
-  'use strict';
-  var
-    matcher = /\/?(.*\/)+(.*)(\..*)/.exec(file.path),
-    filename = matcher[2],
-    extension = matcher[3],
-    path = matcher[1]
-      .split(options.templateFolderName + '/')[1]
-      .replace(new RegExp('/?' + filename + extension), '')
-      .split('/').join('-');
-  return path + filename;
+/**
+ *
+ * @param {!vinyl.File} file
+ * @returns {object.<string, string>}
+**/
+function getFileNameDescription(file) {
+  return {
+    basename: path.basename(file.path, path.extname(file.path)),
+    extension: path.extname(file.path).substr(1),
+    path: path.dirname(file.path)
+  };
 }
 
-function compile(file, options, callback) {
-  'use strict';
-  var content = '';
-  if (!file) return callback(new PluginError(PACKAGE_NAME, 'No file given'));
-  // prepend unescaped html
-  if (typeof options.prefix === 'string') {
-    content += options.prefix.replace('{id}', getId(file, options));
+/**
+ *
+ * @param {!vinyl.File} file
+ * @param {!object.<string, string>} options
+ * @param {!function(PluginError, Buffer)} callback
+**/
+function escapeFile(file, options, callback) {
+  var
+    content = '',
+    prefix, suffix;
+  if (!file) return callback(new PluginError(PACKAGE_NAME, 'No file given'), null);
+  if (file.isStream()) return callback(new PluginError(PACKAGE_NAME, 'Streaming not supported'), null);
+  // prepend unescaped html prefix
+  if (typeof options.prefix === 'function') {
+    prefix = options.prefix(getFileNameDescription(file));
+    if (typeof prefix !== 'undefined' && prefix !== null) content += String(prefix);
+  } else if (typeof options.prefix !== 'undefined' && options.prefix !== null) {
+    content += String(options.prefix);
   }
   // add escaped html
-  content += escape(file.contents.toString());
-  // append unescaped html
-  if (typeof options.suffix === 'string') {
-    content += options.suffix;
+  content += escape(file.contents);
+  // append unescaped html suffix
+  if (typeof options.suffix === 'function') {
+    suffix = options.suffix(getFileNameDescription(file));
+    if (typeof suffix !== 'undefined' && suffix !== null) content += String(suffix);
+  } else if (typeof options.suffix !== 'undefined' && options.suffix !== null) {
+    content += String(options.suffix);
   }
-  callback(null, content);
+  callback(null, new Buffer(content));
 }
 
 module.exports = function (options) {
-  'use strict';
   options = options || {};
-  if (!options.templateFolderName) options.templateFolderName = 'templates';
   return map(function (file, callback) {
-    compile(file, options, function (err, data) {
+    escapeFile(file, options, function (err, buffer) {
       if (err) return callback(err);
-      file.contents = new Buffer(data);
+      file.contents = buffer;
       callback(null, file);
     });
   });
