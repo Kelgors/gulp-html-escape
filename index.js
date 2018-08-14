@@ -14,6 +14,7 @@ function getFileNameDescription(file) {
   return {
     basename: path.basename(file.path, path.extname(file.path)),
     extension: path.extname(file.path).substr(1),
+    content: fs.readFileSync(path.basename(file.path, path.extname(file.path)), "utf8");
     path: path.dirname(file.path)
   };
 }
